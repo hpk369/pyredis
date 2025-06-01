@@ -2,6 +2,7 @@
 
 import time
 import threading
+import json
 
 class KeyValueStore:
     def __init__(self):
@@ -72,3 +73,27 @@ class KeyValueStore:
 
         thread = threading.Thread(target=cleanup, daemon=True)
         thread.start()
+
+    def save_to_disk(self, filename):
+        # Save current store and expiration data to a JSON file
+        with self.lock:
+            data = {
+                "store": self.store,
+                "expirations": self.expirations
+            }
+            with open(filename, "w") as f:
+                json.dump(data, f)
+
+    def load_from_disk(self, filename):
+        # Load store and expiration data from JSON file if it exists
+        try:
+            with open(filename, "r") as f:
+                data = json.load(f)
+                with self.lock:
+                    self.store = data.get("store", {})
+                    self.expirations = {
+                        k: v for k,v in data.get("expirations", {}).items()
+                        if time.time() < v # Only reload keys that haven't expired
+                    }
+        except FileNotFoundError:
+            pass    # If file doesn't exist, start with empty store

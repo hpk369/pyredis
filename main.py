@@ -5,18 +5,24 @@ from core.kv_store import KeyValueStore
 import argparse
 import threading
 import time
+import atexit
 
 def main():
-  # Setup command-line parser
+  # Initialize the CLI parser and accept one or more arguments
   parser = argparse.ArgumentParser(description="PyRedis - In-Memory Key-Value Store")
   parser.add_argument("command", nargs='+', help="Command to run (SET, GET, DEL, EXPIRE, TIL, FLUSHALL)")
   args = parser.parse_args()
 
+  # Create an instance of the store and load saved data if available
   store = KeyValueStore()
+  store.load_from_disk("data-store.json")   # Restore previous session data
   store.start_ttl_cleanup_thread()  # Start background thread to monitor key expirations
 
+  # Ensure that data is saved to disk when the program exits
+  
+  # Read the command and parse its arguments
   cmd_parts = args.command
-  cmd = cmd_parts[0].upper()
+  cmd = cmd_parts[0].upper()    # Convert to uppercase for uniform handling
 
   try:
     # Handle each supported command

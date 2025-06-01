@@ -4,6 +4,7 @@ from core.kv_store import KeyValueStore
 
 import unittest
 import time
+import os
 
 
 class TestKeyValueStore(unittest.TestCase):
@@ -43,6 +44,25 @@ class TestKeyValueStore(unittest.TestCase):
         time.sleep(3)
         self.assertIsNone(self.kv.get("temp"))
         self.assertEqual(self.kv.ttl("temp"), -1)
+
+    def test_save_and_load_from_disk(self):
+        test_file = "test-data.json"
+
+        # Set and save data
+        self.kv.set("framework", "flask")
+        self.kv.expire("framework", 10)
+        self.kv.save_to_disk(test_file)
+
+        # Load data into a new instance
+        new_kv = KeyValueStore()
+        new_kv.load_from_disk(test_file)
+
+        # Validate persistence
+        self.assertEqual(new_kv.get("framework"), "flask")
+        self.assertTrue(new_kv.ttl("framework") > 0)
+
+        # Clean up
+        os.remove(test_file)
 
 if __name__ == '__main__':
     unittest.main()
