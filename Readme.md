@@ -42,10 +42,10 @@ Then visit: [http://localhost:9567](http://localhost:9567)
 # Build the image
 docker build -t pyredis-webgui .
 
-# Run the container (on port 5000)
-docker run --rm -p 5000:5000 pyredis-webgui
+# Run the container (on port 9567)
+docker run --rm -p 9567:9567 pyredis-webgui
 ```
-Visit: [http://localhost:5000](http://localhost:9567)
+Visit: [http://localhost:9567](http://localhost:9567)
 
 ---
 
