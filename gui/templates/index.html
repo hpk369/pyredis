@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset="UTF-8">
+    <title>PyRedis Web GUI</title>
+  </head>
+  <body>
+    <h1>PyRedis Web GUI</h1>
+    <form method="post">
+      <input type="text" name="key" placeholder="Key"  value="{{ key_input }}" required>
+      <input type="text" name="value" placeholder="Value" value="{{ val_input }}">
+      <button name="action" value="set">SET</button>
+      <button name="action" value="get">GET</button>
+      <button name="action" value="del">DEL</button>
+      <button name="action" value="flush">FLUSH ALL</button>
+    </form>
+    {% if value %}<p><strong>GET Result:</strong> {{ value }}</p>{% endif %}
+    {% if result %}<p><strong>Status:</strong> {{ result }}</p>{% endif %}
+  </body>
+</html>
